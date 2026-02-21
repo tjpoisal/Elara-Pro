@@ -1,0 +1,101 @@
+@layer reset, base, tokens, recipes, utilities;
+
+:root {
+  --color-obsidian: #1a1a2e;
+  --color-obsidian-light: #252540;
+  --color-obsidian-mid: #2d2d4a;
+  --color-rose-gold: #c4956a;
+  --color-rose-gold-light: #d4a97a;
+  --color-warm-cream: #f5f0e8;
+  --color-slate-blue: #6b7fa3;
+  --color-success: #4caf7d;
+  --color-warning: #e8a948;
+  --color-error: #d94f4f;
+  --color-info: #5b9bd5;
+  --color-surface-dark: #0f0f1a;
+  --color-surface-mid: #1a1a2e;
+  --color-surface-light: #252540;
+  --color-text-primary: #f5f0e8;
+  --color-text-secondary: #b0a898;
+  --color-text-muted: #6b6878;
+  --color-border: #2d2d4a;
+  --color-border-focus: #c4956a;
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+  --tap-target: 44px;
+  color-scheme: dark;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+body {
+  color: var(--color-text-primary);
+  background: var(--color-surface-dark);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+a {
+  color: var(--color-rose-gold);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--color-rose-gold-light);
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+button {
+  cursor: pointer;
+  min-height: var(--tap-target);
+  min-width: var(--tap-target);
+}
+
+input, select, textarea {
+  min-height: var(--tap-target);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-rose-gold);
+  color: var(--color-obsidian);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-obsidian-mid);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-blue);
+}
