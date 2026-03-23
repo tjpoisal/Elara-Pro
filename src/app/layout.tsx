@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { SalonProvider } from '@/lib/salon-context';
+import { ElaraChat } from '@/components/ElaraChat';
 
 export const metadata: Metadata = {
   title: 'Elara Pro — AI Hair Color Consultation Platform',
@@ -31,7 +33,10 @@ export default function RootLayout({
           minHeight: '100vh',
         }}
       >
-        {children}
+        <SalonProvider>
+          {children}
+          <ElaraChat />
+        </SalonProvider>
       </body>
     </html>
   );

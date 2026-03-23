@@ -32,6 +32,12 @@ export const brands = pgTable('brands', {
   logoUrl: text('logo_url'),
   website: varchar('website', { length: 255 }),
   isActive: boolean('is_active').default(true).notNull(),
+  // 'seed' = built-in catalog, 'ai_discovered' = added by Elara, 'manual' = added by admin
+  source: varchar('source', { length: 30 }).default('seed').notNull(),
+  // Which salon's stylist triggered the discovery (audit trail only — brand is global)
+  discoveredBySalonId: uuid('discovered_by_salon_id'),
+  aiConfidence: decimal('ai_confidence', { precision: 4, scale: 3 }),
+  aiNotes: text('ai_notes'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
