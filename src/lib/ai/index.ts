@@ -1,3 +1,4 @@
+
 import Anthropic from '@anthropic-ai/sdk';
 
 const getClient = () => new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
@@ -169,3 +170,7 @@ ${JSON.stringify(consultation, null, 2)}`,
 
   return JSON.parse(textContent.text) as ConfidenceResult;
 }
+
+// Re-export brand discovery utilities
+export { discoverBrand, slugify } from './brandDiscovery';
+export type { DiscoveredBrand, DiscoveredProductLine } from './brandDiscovery';

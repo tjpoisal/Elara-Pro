@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
       priceId,
       successUrl: `${process.env.NEXT_PUBLIC_APP_URL}/settings/billing?success=true`,
       cancelUrl: `${process.env.NEXT_PUBLIC_APP_URL}/settings/billing?canceled=true`,
-      trialDays: 14,
+      trialDays: 7,
     });
 
     return jsonResponse({ url: checkoutUrl });

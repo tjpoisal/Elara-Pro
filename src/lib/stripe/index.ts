@@ -84,6 +84,19 @@ export const SUBSCRIPTION_TIERS = {
 
 export type TierSlug = keyof typeof SUBSCRIPTION_TIERS;
 
+/** Voice add-on — $9.99/month, separate from main subscription */
+export const VOICE_ADDON = {
+  name: 'Elara Voice',
+  slug: 'voice',
+  monthlyPrice: 999, // cents
+  stripePriceId: process.env.STRIPE_VOICE_ADDON_PRICE_ID ?? 'price_voice_monthly',
+  features: [
+    'Elara TTS voice responses',
+    'Choice of 5 AI voices',
+    'Voice playback in chat',
+  ],
+} as const;
+
 /** Create a Stripe checkout session for a subscription */
 export async function createCheckoutSession(params: {
   customerId: string;
