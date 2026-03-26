@@ -8,6 +8,8 @@ import { Navigation, MainContent, PageHeader, Card, Button } from '@/components/
 interface InventoryItem {
   id: string;
   productId: string;
+  productName: string | null;
+  productShade: string | null;
   currentStockGrams: string;
   minimumStockGrams: string;
   reorderPointGrams: string | null;
@@ -159,7 +161,8 @@ export default function InventoryPage() {
                     <div className={css`flex: 1; min-width: 200px;`}>
                       <div className={css`display: flex; align-items: center; gap: 0.625rem; margin-bottom: 0.375rem;`}>
                         <p className={css`color: ${theme.colors.warmCream}; font-weight: 600; margin: 0; font-size: 0.9rem;`}>
-                          Product #{item.productId.slice(0, 8)}
+                          {item.productName ?? `Product #${item.productId.slice(0, 8)}`}
+                          {item.productShade ? ` — ${item.productShade}` : ''}
                         </p>
                         <span className={css`
                           font-size: 0.7rem; padding: 0.15rem 0.5rem;

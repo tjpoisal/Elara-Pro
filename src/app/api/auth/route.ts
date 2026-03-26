@@ -109,5 +109,61 @@ export async function POST(request: NextRequest) {
     });
   }
 
+  if (action === 'update-salon') {
+    const authCtx = getAuthContext(request);
+    if (!authCtx) return errorResponse('Unauthorized', 401);
+
+    let body: Record<string, string | undefined>;
+    try { body = await request.json(); } catch { return errorResponse('Invalid JSON', 400); }
+
+    await db
+      .update(salons)
+      .set({
+        ...(body.name ? { name: body.name } : {}),
+        ...(body.email !== undefined ? { email: body.email } : {}),
+        ...(body.phone !== undefined ? { phone: body.phone } : {}),
+        ...(body.address !== undefined ? { address: body.address } : {}),
+        ...(body.city !== undefined ? { city: body.city } : {}),
+        ...(body.state !== undefined ? { state: body.state } : {}),
+        ...(body.preferredVoiceId !== undefined ? { preferredVoiceId: body.preferredVoiceId } : {}),
+        updatedAt: new Date(),
+      })
+      .where(eq(salons.id, authCtx.salonId));
+
+    return jsonResponse({ ok: true });
+  }
+
   return errorResponse('Invalid action. Use ?action=register or ?action=login');
+}
+
+export async function PATCH(request: NextRequest) {
+  const url = new URL(request.url);
+  const action = url.searchParams.get('action');
+
+  if (action === 'update-salon') {
+    const { getAuthContext: auth } = await import('@/lib/api-helpers');
+    const authCtx = auth(request);
+    if (!authCtx) return errorResponse('Unauthorized', 401);
+
+    let body: Record<string, string | undefined>;
+    try { body = await request.json(); } catch { return errorResponse('Invalid JSON', 400); }
+
+    await db
+      .update(salons)
+      .set({
+        ...(body.name ? { name: body.name } : {}),
+        ...(body.email !== undefined ? { email: body.email } : {}),
+        ...(body.phone !== undefined ? { phone: body.phone } : {}),
+        ...(body.address !== undefined ? { address: body.address } : {}),
+        ...(body.city !== undefined ? { city: body.city } : {}),
+        ...(body.state !== undefined ? { state: body.state } : {}),
+        ...(body.preferredVoiceId !== undefined ? { preferredVoiceId: body.preferredVoiceId } : {}),
+        updatedAt: new Date(),
+      })
+      .where(eq(salons.id, authCtx.salonId));
+
+    return jsonResponse({ ok: true });
+  }
+
+  return errorResponse('Invalid action');
 }

@@ -7,11 +7,12 @@ import { Navigation, MainContent, PageHeader, Card, Grid, Button, Badge } from '
 
 interface ConsultationSummary {
   id: string;
-  clientName: string;
-  service: string;
-  date: string;
+  clientId: string | null;
+  desiredResult: string | null;
   status: 'draft' | 'in_progress' | 'completed' | 'archived';
-  level: string;
+  currentLevel: number | null;
+  targetLevel: number | null;
+  createdAt: string;
 }
 
 const statusColors: Record<string, string> = {
@@ -34,7 +35,7 @@ export default function ConsultationsPage() {
         if (!r.ok) throw new Error(`${r.status}`);
         return r.json();
       })
-      .then((data) => setConsultations(data))
+      .then((data) => setConsultations(data.consultations ?? []))
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
@@ -45,11 +46,11 @@ export default function ConsultationsPage() {
     try {
       const res = await fetch('/api/consultations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
       if (!res.ok) throw new Error(`${res.status}`);
-      const { id } = await res.json();
-      router.push(`/consult/${id}`);
+      const data = await res.json();
+      const id = data.consultation?.id ?? data.id;
+      if (id) router.push(`/consult/${id}`);
     } catch {
-      // Fallback: navigate with a temp id if API not yet wired
-      router.push(`/consult/${crypto.randomUUID().slice(0, 8)}`);
+      router.push('/consult/new');
     }
   };
 
@@ -103,16 +104,23 @@ export default function ConsultationsPage() {
               <Card key={c.id}>
                 <div className={css`display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;`}>
                   <div>
-                    <h3 className={css`font-family: ${theme.fonts.heading}; color: ${theme.colors.warmCream}; margin-bottom: 0.25rem;`}>{c.clientName}</h3>
-                    <p className={css`color: ${theme.colors.textSecondary}; font-size: 0.875rem;`}>{c.service}</p>
+                    <h3 className={css`font-family: ${theme.fonts.heading}; color: ${theme.colors.warmCream}; margin-bottom: 0.25rem; font-size: 0.95rem;`}>
+                      {c.desiredResult ? c.desiredResult.slice(0, 60) + (c.desiredResult.length > 60 ? '…' : '') : 'Consultation'}
+                    </h3>
+                    {(c.currentLevel || c.targetLevel) && (
+                      <p className={css`color: ${theme.colors.textSecondary}; font-size: 0.8rem;`}>
+                        {c.currentLevel ? `Level ${c.currentLevel}` : ''}
+                        {c.currentLevel && c.targetLevel ? ' → ' : ''}
+                        {c.targetLevel ? `Level ${c.targetLevel}` : ''}
+                      </p>
+                    )}
                   </div>
                   <Badge color={statusColors[c.status] ?? theme.colors.textMuted}>{c.status.replace('_', ' ')}</Badge>
                 </div>
                 <div className={css`display: flex; justify-content: space-between; align-items: center;`}>
-                  <div>
-                    <p className={css`color: ${theme.colors.textMuted}; font-size: 0.75rem;`}>{c.date}</p>
-                    {c.level && <p className={css`color: ${theme.colors.roseGold}; font-size: 0.75rem;`}>Level {c.level}</p>}
-                  </div>
+                  <p className={css`color: ${theme.colors.textMuted}; font-size: 0.75rem;`}>
+                    {new Date(c.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </p>
                   <Button variant="secondary" onClick={() => router.push(`/consult/${c.id}`)}>Open</Button>
                 </div>
               </Card>

@@ -73,11 +73,26 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     setSaving(true);
-    // In production this would POST to /api/settings or /api/auth
-    await new Promise((r) => setTimeout(r, 600));
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    try {
+      const res = await fetch('/api/auth?action=update-salon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email || undefined,
+          phone: form.phone || undefined,
+          address: form.address || undefined,
+          city: form.city || undefined,
+          state: form.state || undefined,
+          preferredVoiceId: selectedVoice || undefined,
+        }),
+      });
+      if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 2500); }
+    } catch {
+      // silent — settings save is best-effort
+    } finally {
+      setSaving(false);
+    }
   };
 
   const previewVoice = async (voiceId: string) => {

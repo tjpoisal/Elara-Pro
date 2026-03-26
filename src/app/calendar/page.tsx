@@ -55,7 +55,8 @@ export default function CalendarPage() {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'week' | 'day'>('week');
   const [showNewModal, setShowNewModal] = useState(false);
-  const [newAppt, setNewAppt] = useState({ serviceType: '', scheduledAt: '', durationMinutes: 60, price: '' });
+  const [newAppt, setNewAppt] = useState({ serviceType: '', scheduledAt: '', durationMinutes: 60, price: '', clientId: '' });
+  const [clients, setClients] = useState<{ id: string; firstName: string; lastName: string }[]>([]);
 
   const weekDates = getWeekDates(anchor);
   const startISO = weekDates[0]!.toISOString();
@@ -72,6 +73,15 @@ export default function CalendarPage() {
 
   useEffect(() => { load(); }, [load]);
 
+  useEffect(() => {
+    if (showNewModal && clients.length === 0) {
+      fetch('/api/clients')
+        .then((r) => r.json())
+        .then((d) => setClients(d.clients ?? []))
+        .catch(() => {});
+    }
+  }, [showNewModal, clients.length]);
+
   const prevWeek = () => { const d = new Date(anchor); d.setDate(d.getDate() - 7); setAnchor(d); };
   const nextWeek = () => { const d = new Date(anchor); d.setDate(d.getDate() + 7); setAnchor(d); };
   const today = () => setAnchor(new Date());
@@ -87,7 +97,7 @@ export default function CalendarPage() {
     await fetch('/api/appointments', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...newAppt, clientId: 'placeholder', sendReminder: false }),
+      body: JSON.stringify({ ...newAppt, sendReminder: false }),
     });
     setShowNewModal(false);
     load();
@@ -289,6 +299,28 @@ export default function CalendarPage() {
                 New Appointment
               </h3>
               <div className={css`display: flex; flex-direction: column; gap: 1rem;`}>
+                {/* Client picker */}
+                <div>
+                  <label className={css`color: ${theme.colors.textSecondary}; font-size: 0.75rem; display: block; margin-bottom: 0.25rem;`}>Client</label>
+                  <select
+                    value={newAppt.clientId}
+                    onChange={(e) => setNewAppt((p) => ({ ...p, clientId: e.target.value }))}
+                    className={css`
+                      width: 100%; padding: 0.625rem 0.875rem;
+                      background: ${theme.colors.obsidian};
+                      border: 1px solid ${theme.colors.borderDefault};
+                      border-radius: ${theme.radii.sm};
+                      color: ${theme.colors.warmCream}; font-size: 0.875rem;
+                      box-sizing: border-box;
+                      &:focus { border-color: ${theme.colors.roseGold}; outline: none; }
+                    `}
+                  >
+                    <option value="">— Select client (optional) —</option>
+                    {clients.map((c) => (
+                      <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
+                    ))}
+                  </select>
+                </div>
                 {[
                   { label: 'Service Type', key: 'serviceType', type: 'text', placeholder: 'e.g. Balayage + Toner' },
                   { label: 'Date & Time', key: 'scheduledAt', type: 'datetime-local', placeholder: '' },

@@ -37,10 +37,22 @@ export async function GET(request: NextRequest) {
     return jsonResponse({ product });
   }
 
-  // List inventory
+  // List inventory with product names
   const items = await db
-    .select()
+    .select({
+      id: inventoryItems.id,
+      productId: inventoryItems.productId,
+      productName: products.name,
+      productShade: products.shade,
+      currentStockGrams: inventoryItems.currentStockGrams,
+      minimumStockGrams: inventoryItems.minimumStockGrams,
+      reorderPointGrams: inventoryItems.reorderPointGrams,
+      location: inventoryItems.location,
+      lastRestockedAt: inventoryItems.lastRestockedAt,
+      updatedAt: inventoryItems.updatedAt,
+    })
     .from(inventoryItems)
+    .leftJoin(products, eq(inventoryItems.productId, products.id))
     .where(eq(inventoryItems.salonId, auth.salonId))
     .orderBy(desc(inventoryItems.updatedAt));
 
