@@ -7,6 +7,7 @@ import { theme } from '@/lib/theme';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: '◉' },
+  { href: '/calendar', label: 'Calendar', icon: '📅' },
   { href: '/consult', label: 'Consult', icon: '◎' },
   { href: '/formulate', label: 'Formulate', icon: '⬡' },
   { href: '/clients', label: 'Clients', icon: '◑' },
@@ -14,6 +15,7 @@ const navItems = [
   { href: '/products', label: 'Products', icon: '◈' },
   { href: '/analytics', label: 'Analytics', icon: '◧' },
   { href: '/business', label: 'Business', icon: '◫' },
+  { href: '/achievements', label: 'Achievements', icon: '🏆' },
   { href: '/voice', label: 'Voice', icon: '◉' },
   { href: '/school', label: 'Education', icon: '◬' },
   { href: '/settings', label: 'Settings', icon: '⚙' },

@@ -5,6 +5,7 @@ import { theme } from '@/lib/theme';
 import { Navigation, MainContent, PageHeader, Card, Button, Input, Badge } from '@/components/Navigation';
 import { calculateLift, type HairLevel } from '@/lib/chemistry';
 import { TECHNIQUES, type Technique, type SkillLevel } from '@/lib/techniques/data';
+import { ServiceReminders, CriticalReminders } from '@/components/ServiceReminders';
 
 type ConsultStep = 'service' | 'client-hair' | 'photos' | 'patch-test' | 'consent' | 'color-plan' | 'techniques' | 'summary';
 type ServiceType = 'cut' | 'color' | 'highlights' | 'balayage' | 'chemical' | 'color+cut' | 'highlights+cut';
@@ -255,6 +256,12 @@ export default function ConsultationDetailPage({ params }: { params: { id: strin
                 </Button>
               )}
             </div>
+            {/* Critical reminders appear as soon as a service type is selected */}
+            {data.serviceType && (
+              <div className={css`margin-bottom: 1.5rem;`}>
+                <CriticalReminders serviceType={data.serviceType} />
+              </div>
+            )}
             <Button onClick={() => setCurrentStep('client-hair')} disabled={!data.serviceType}>
               Continue to Hair Assessment
             </Button>
@@ -870,6 +877,16 @@ export default function ConsultationDetailPage({ params }: { params: { id: strin
                   </div>
                 </Card>
               )}
+
+              {/* Service checklist — full phase-by-phase reminders */}
+              {data.serviceType && (
+                <ServiceReminders
+                  serviceType={data.serviceType}
+                  checklistMode
+                  defaultCollapsed={false}
+                />
+              )}
+
               <div className={css`display: flex; flex-direction: column; gap: 0.75rem;`}>
                 <Button onClick={() => alert('Consultation saved! Redirecting to formula builder...')}>
                   Save & Build Formula

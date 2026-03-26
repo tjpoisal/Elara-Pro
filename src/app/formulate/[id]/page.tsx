@@ -5,6 +5,7 @@ import { theme } from '@/lib/theme';
 import { Navigation, MainContent, PageHeader, Card, Button, Input, Badge } from '@/components/Navigation';
 import { calculateLift, calculateGrayCoverage, calculateAdjustedTiming, type HairLevel } from '@/lib/chemistry';
 import { useSalon } from '@/lib/salon-context';
+import { HeadMap, type SectionPlacement } from '@/components/HeadMap';
 
 interface FormulaZone {
   id: string;
@@ -32,6 +33,7 @@ export default function FormulaDetailPage({ params }: { params: { id: string } }
   const [porosity, setPorosity] = useState<'low' | 'medium' | 'high'>('medium');
   const [texture, setTexture] = useState<'fine' | 'medium' | 'coarse'>('medium');
   const [zones, setZones] = useState<FormulaZone[]>([]);
+  const [headMapPlacements, setHeadMapPlacements] = useState<SectionPlacement[]>([]);
   const [selectedBrand, setSelectedBrand] = useState<string>('');
   const [formulaName, setFormulaName] = useState('');
   const [saving, setSaving] = useState(false);
@@ -295,6 +297,16 @@ export default function FormulaDetailPage({ params }: { params: { id: string } }
               <Button variant="secondary">Save as Template</Button>
             </div>
           </div>
+        </div>
+
+        {/* Head Map — full width below the two-column layout */}
+        <div className={css`margin-top: 1.5rem;`}>
+          <HeadMap
+            value={headMapPlacements}
+            onChange={setHeadMapPlacements}
+            zoneLabels={zones.map((z) => z.name)}
+            showBranding
+          />
         </div>
       </MainContent>
     </>

@@ -6,3 +6,7 @@ export * from './inventory';
 export * from './safety';
 export * from './business';
 export * from './platform';
+export * from './appointments';
+export * from './gamification';
+export * from './photos';
+export * from './retail';

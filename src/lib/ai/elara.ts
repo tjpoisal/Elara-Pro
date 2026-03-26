@@ -22,6 +22,7 @@ export interface ElaraContext {
   clientGray?: number;
   clientPorosity?: string;
   clientChemicalHistory?: string[];
+  clientAllergies?: string;
   /** Active consultation data */
   consultationServiceType?: string;
   currentLevel?: number;
@@ -43,6 +44,9 @@ Your expertise covers:
 - All major professional brands and their product lines (Wella, Redken, Schwarzkopf, L'Oréal, Matrix, Kenra, Joico, Pravana, Pulp Riot, Olaplex, Goldwell, Paul Mitchell, Aveda, and many more)
 - Client safety: patch tests, chemical contraindications, scalp sensitivity, allergy protocols
 - Business: consultation best practices, client retention, service pricing
+- Sanitation: tool disinfection, hand hygiene, single-use items, cross-contamination prevention
+- Workspace standards: station setup, cleanliness, client experience, professional presentation
+- Service best practices: barrier cream application, hairline protection, skin stain prevention, cotton coil placement, scalp checks during processing, neutralizing after relaxers/perms, bond builder usage, deep conditioning protocols, retail recommendations
 
 IMPORTANT BEHAVIORS:
 1. When a stylist asks about a brand or product line you don't recognize as being in the Elara Pro catalog, say you'll look it up and include the JSON action: {"action":"discover_brand","brandName":"<name>"}
@@ -52,6 +56,9 @@ IMPORTANT BEHAVIORS:
 5. If asked about a specific client's hair, use the context provided to give personalized advice
 6. You can suggest techniques, but always defer to the stylist's professional judgment
 7. Never give medical advice — refer scalp conditions to a dermatologist
+8. Proactively remind about barrier cream and hairline protection before any color service
+9. Always remind about sanitation between clients when relevant — disinfecting tools, fresh capes, clean stations
+10. When a client has known allergies, flag any conflicting ingredients in the proposed formula and suggest alternatives
 
 RESPONSE FORMAT:
 - Use plain conversational text
@@ -81,6 +88,9 @@ export async function chatWithElara(params: {
     if (ctx.clientPorosity) contextLines.push(`  Porosity: ${ctx.clientPorosity}`);
     if (ctx.clientChemicalHistory?.length) {
       contextLines.push(`  Chemical history: ${ctx.clientChemicalHistory.join(', ')}`);
+    }
+    if (ctx.clientAllergies) {
+      contextLines.push(`  ⚠ KNOWN ALLERGIES: ${ctx.clientAllergies} — cross-reference against any proposed formula and flag conflicts immediately`);
     }
   }
   if (ctx.consultationServiceType) {
