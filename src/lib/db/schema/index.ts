@@ -10,3 +10,4 @@ export * from './appointments';
 export * from './gamification';
 export * from './photos';
 export * from './retail';
+export * from './rag';
