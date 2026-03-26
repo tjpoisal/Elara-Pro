@@ -279,8 +279,8 @@ export default function LandingPage() {
         min-height: 100vh;
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         text-align: center; padding: 8rem 1.5rem 5rem;
-        background: radial-gradient(ellipse 80% 60% at 50% 0%, ${theme.colors.roseGold}18 0%, transparent 70%),
-                    radial-gradient(ellipse at bottom, ${theme.colors.obsidianLight} 0%, ${theme.colors.surfaceDark} 80%);
+        background: radial-gradient(ellipse 80% 60% at 50% 0%, ${theme.colors.amethystDeep}25 0%, transparent 70%),
+                    linear-gradient(180deg, ${theme.colors.void} 0%, ${theme.colors.obsidian} 100%);
         position: relative; overflow: hidden;
       `}>
         <div className={css`
@@ -310,12 +310,14 @@ export default function LandingPage() {
             font-size: clamp(3rem, 8vw, 5.5rem);
             line-height: 1.05;
             margin: 0 0 1.5rem;
-            background: linear-gradient(135deg, ${theme.colors.warmCream} 40%, ${theme.colors.roseGold} 100%);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #f0eaff 30%, #d4af37 70%, #f5e070 100%);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: ${shimmer} 4s linear infinite;
+            animation: shimmer-gold 4s linear infinite;
           `}>
             The Hairdresser's<br />Ultimate Tool
           </h1>

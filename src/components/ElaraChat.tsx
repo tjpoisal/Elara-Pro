@@ -28,7 +28,7 @@ interface ElaraChatProps {
   targetLevel?: number;
 }
 
-const GREETING = "Hi, I'm Elara ✦ Ask me anything — formulas, techniques, color theory, or about a brand you're working with.";
+const GREETING = "Hi, I'm Elara ✦  Ask me anything — formulas, techniques, color theory, or about a brand you're working with.";
 
 export function ElaraChat(props: ElaraChatProps) {
   const { settings } = useSalon();
@@ -165,14 +165,17 @@ export function ElaraChat(props: ElaraChatProps) {
         className={css`
           position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 1000;
           width: 56px; height: 56px; border-radius: 50%;
-          background: linear-gradient(135deg, ${theme.colors.roseGold}, #c97b8a);
+          background: linear-gradient(135deg, #d4af37 0%, #f5e070 50%, #d4af37 100%);
+          background-size: 200% auto;
+          animation: shimmer-gold 4s linear infinite;
           border: none; cursor: pointer;
           display: flex; align-items: center; justify-content: center;
-          font-size: 1.5rem;
-          box-shadow: 0 4px 20px ${theme.colors.roseGold}60;
+          font-size: 1.375rem;
+          box-shadow: 0 0 24px rgba(212,175,55,0.4), 0 4px 16px rgba(0,0,0,0.5);
           transition: transform 0.2s, box-shadow 0.2s;
-          &:hover { transform: scale(1.08); box-shadow: 0 6px 28px ${theme.colors.roseGold}80; }
-          &:focus-visible { outline: 2px solid ${theme.colors.roseGold}; outline-offset: 3px; }
+          color: #100d1e;
+          &:hover { transform: scale(1.08); box-shadow: 0 0 36px rgba(212,175,55,0.6), 0 6px 24px rgba(0,0,0,0.5); }
+          &:focus-visible { outline: 2px solid #d4af37; outline-offset: 3px; }
         `}
       >
         {open ? '✕' : '✦'}
@@ -188,30 +191,30 @@ export function ElaraChat(props: ElaraChatProps) {
             width: min(420px, calc(100vw - 2rem));
             height: min(560px, calc(100vh - 8rem));
             background: ${theme.colors.obsidianMid};
-            border: 1px solid ${theme.colors.borderDefault};
-            border-radius: ${theme.radii.lg};
+            border: 1px solid ${theme.colors.gold}30;
+            border-radius: ${theme.radii.xl};
             display: flex; flex-direction: column;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.7), 0 0 0 1px ${theme.colors.gold}15;
             overflow: hidden;
           `}
         >
           {/* Header */}
           <div className={css`
             padding: 0.875rem 1rem;
-            background: linear-gradient(135deg, ${theme.colors.obsidian}, ${theme.colors.obsidianMid});
+            background: ${theme.colors.void};
             border-bottom: 1px solid ${theme.colors.borderDefault};
             display: flex; align-items: center; justify-content: space-between;
           `}>
             <div className={css`display: flex; align-items: center; gap: 0.625rem;`}>
               <div className={css`
                 width: 32px; height: 32px; border-radius: 50%;
-                background: linear-gradient(135deg, ${theme.colors.roseGold}, #c97b8a);
+                background: linear-gradient(135deg, #d4af37 0%, #f5e070 100%);
                 display: flex; align-items: center; justify-content: center;
-                font-size: 0.875rem; font-weight: 700; color: white;
+                font-size: 0.875rem; font-weight: 700; color: #100d1e;
               `}>E</div>
               <div>
-                <p className={css`color: ${theme.colors.warmCream}; font-weight: 600; font-size: 0.9rem; line-height: 1;`}>Elara</p>
-                <p className={css`color: ${theme.colors.roseGold}; font-size: 0.7rem;`}>AI Hair Assistant</p>
+                <p className={css`color: ${theme.colors.textPrimary}; font-weight: 600; font-size: 0.9rem; line-height: 1; font-family: ${theme.fonts.heading};`}>Elara</p>
+                <p className={css`color: ${theme.colors.gold}; font-size: 0.68rem; letter-spacing: 0.05em;`}>AI Hair Assistant</p>
               </div>
             </div>
             <div className={css`display: flex; align-items: center; gap: 0.5rem;`}>
@@ -220,12 +223,12 @@ export function ElaraChat(props: ElaraChatProps) {
                 onClick={() => { if (speaking) stopSpeaking(); setVoiceEnabled((v) => !v); }}
                 title={voiceEnabled ? 'Voice on — click to mute' : 'Enable voice'}
                 className={css`
-                  background: ${voiceEnabled ? theme.colors.roseGold + '25' : 'transparent'};
-                  border: 1px solid ${voiceEnabled ? theme.colors.roseGold : theme.colors.borderDefault};
+                  background: ${voiceEnabled ? theme.colors.gold + '20' : 'transparent'};
+                  border: 1px solid ${voiceEnabled ? theme.colors.gold : theme.colors.borderDefault};
                   border-radius: ${theme.radii.sm}; padding: 0.25rem 0.5rem;
-                  color: ${voiceEnabled ? theme.colors.roseGold : theme.colors.textMuted};
-                  font-size: 0.75rem; cursor: pointer;
-                  &:focus-visible { outline: 2px solid ${theme.colors.roseGold}; }
+                  color: ${voiceEnabled ? theme.colors.gold : theme.colors.textMuted};
+                  font-size: 0.75rem; cursor: pointer; min-height: unset; min-width: unset;
+                  &:focus-visible { outline: 2px solid ${theme.colors.gold}; }
                 `}
               >
                 {speaking ? '⏹ Stop' : voiceEnabled ? '🔊 On' : '🔇 Off'}
@@ -248,10 +251,10 @@ export function ElaraChat(props: ElaraChatProps) {
                   padding: 0.625rem 0.875rem;
                   border-radius: ${msg.role === 'user' ? '1rem 1rem 0.25rem 1rem' : '1rem 1rem 1rem 0.25rem'};
                   background: ${msg.role === 'user'
-                    ? `linear-gradient(135deg, ${theme.colors.roseGold}, #c97b8a)`
+                    ? `linear-gradient(135deg, ${theme.colors.gold}, ${theme.colors.goldLight})`
                     : theme.colors.obsidian};
                   border: ${msg.role === 'assistant' ? `1px solid ${theme.colors.borderDefault}` : 'none'};
-                  color: ${msg.role === 'user' ? 'white' : theme.colors.textSecondary};
+                  color: ${msg.role === 'user' ? theme.colors.obsidian : theme.colors.textSecondary};
                   font-size: 0.85rem;
                   line-height: 1.5;
                   white-space: pre-wrap;
@@ -299,13 +302,13 @@ export function ElaraChat(props: ElaraChatProps) {
               aria-label="Send message"
               className={css`
                 width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
-                background: ${theme.colors.roseGold};
+                background: ${theme.colors.gold};
                 border: none; cursor: pointer;
                 display: flex; align-items: center; justify-content: center;
-                font-size: 1rem; color: white;
+                font-size: 1rem; color: ${theme.colors.obsidian}; font-weight: 700;
                 transition: opacity 0.15s;
                 &:disabled { opacity: 0.4; cursor: not-allowed; }
-                &:focus-visible { outline: 2px solid ${theme.colors.roseGold}; outline-offset: 2px; }
+                &:focus-visible { outline: 2px solid ${theme.colors.gold}; outline-offset: 2px; }
               `}
             >
               ↑

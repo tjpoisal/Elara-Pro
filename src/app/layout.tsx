@@ -17,22 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="dark">
       <head>
-        <meta name="theme-color" content="#1a1a2e" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
+        <meta name="theme-color" content="#100d1e" />
       </head>
-      <body
-        style={{
-          margin: 0,
-          padding: 0,
-          backgroundColor: '#0f0f1a',
-          color: '#f5f0e8',
-          fontFamily: "'Inter', sans-serif",
-          minHeight: '100vh',
-        }}
-      >
+      <body>
         <SalonProvider>
           {children}
           <ElaraChat />
