@@ -68,11 +68,12 @@ RESPONSE FORMAT:
 
 /**
  * Send a message to Elara and get a response.
- * Handles multi-turn conversation history.
+ * Handles multi-turn conversation history and RAG context injection.
  */
 export async function chatWithElara(params: {
   messages: ChatMessage[];
   context?: ElaraContext;
+  ragContext?: string;
 }): Promise<{ reply: string; action?: { action: string; [key: string]: string } }> {
   const client = getClient();
 
@@ -106,10 +107,15 @@ export async function chatWithElara(params: {
     ? `${SYSTEM_PROMPT}\n\nCURRENT CONTEXT:\n${contextLines.join('\n')}`
     : SYSTEM_PROMPT;
 
+  // Inject RAG knowledge base context if available
+  const finalSystem = params.ragContext
+    ? `${systemWithContext}${params.ragContext}`
+    : systemWithContext;
+
   const response = await client.messages.create({
     model: MODEL,
     max_tokens: 1024,
-    system: systemWithContext,
+    system: finalSystem,
     messages: params.messages.map((m) => ({ role: m.role, content: m.content })),
   });
 

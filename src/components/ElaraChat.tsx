@@ -13,6 +13,7 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   isLoading?: boolean;
+  feedback?: 1 | -1 | null;
 }
 
 interface ElaraChatProps {

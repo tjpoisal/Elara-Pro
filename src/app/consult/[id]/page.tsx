@@ -888,15 +888,16 @@ export default function ConsultationDetailPage({ params }: { params: { id: strin
               )}
 
               <div className={css`display: flex; flex-direction: column; gap: 0.75rem;`}>
-                <Button onClick={() => alert('Consultation saved! Redirecting to formula builder...')}>
-                  Save & Build Formula
+                <Button onClick={handleSaveConsultation}>
+                  {isSaving ? 'Saving…' : 'Save & Build Formula'}
                 </Button>
-                <Button variant="secondary" onClick={() => alert('Consultation saved as draft.')}>
-                  Save as Draft
+                <Button variant="secondary" onClick={() => handleSaveConsultation(true)}>
+                  {isSaving ? 'Saving…' : 'Save as Draft'}
                 </Button>
                 <Button variant="secondary" onClick={() => window.print()}>
                   Print / Export PDF
                 </Button>
+                {saveError && <p className={css`color: ${theme.colors.error}; font-size: 0.78rem; margin: 0;`}>{saveError}</p>}
               </div>
             </div>
           </div>

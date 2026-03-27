@@ -78,10 +78,10 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
     const id = params.id;
     Promise.all([
       fetch(`/api/clients/${id}`).then((r) => r.ok ? r.json() : Promise.reject(r.status)),
-      fetch(`/api/clients/${id}/services`).then((r) => r.ok ? r.json() : []),
-      fetch(`/api/clients/${id}/formulas`).then((r) => r.ok ? r.json() : []),
-      fetch(`/api/clients/${id}/patch-tests`).then((r) => r.ok ? r.json() : []),
-      fetch(`/api/clients/${id}/photos`).then((r) => r.ok ? r.json() : []),
+      fetch(`/api/clients/${id}?section=services`).then((r) => r.ok ? r.json() : []),
+      fetch(`/api/clients/${id}?section=formulas`).then((r) => r.ok ? r.json() : []),
+      fetch(`/api/clients/${id}?section=patch-tests`).then((r) => r.ok ? r.json() : []),
+      fetch(`/api/clients/${id}?section=photos`).then((r) => r.ok ? r.json() : []),
     ])
       .then(([c, s, f, pt, ph]) => {
         setClient(c);

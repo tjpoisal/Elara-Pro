@@ -42,7 +42,7 @@ export default function FormulaDetailPage({ params }: { params: { id: string } }
   const grayResult = grayPct > 0 ? calculateGrayCoverage(grayPct, targetLevel as HairLevel, startLevel as HairLevel) : null;
   const timingResult = calculateAdjustedTiming(35, porosity, texture, 'permanent');
 
-  const brand = carriedBrands.find((b) => b.slug === selectedBrand);
+  const label = css`color: ${theme.colors.textSecondary}; font-size: 0.75rem; display: block; margin-bottom: 0.375rem;`;
 
   const addZone = () => {
     const newZone: FormulaZone = {
@@ -67,9 +67,42 @@ export default function FormulaDetailPage({ params }: { params: { id: string } }
 
   const removeZone = (id: string) => setZones(zones.filter((z) => z.id !== id));
 
-  const totalGrams = zones.reduce((sum, z) => sum + z.amountGrams, 0);
+  const [saveError, setSaveError] = useState('');
 
-  const label = css`color: ${theme.colors.textSecondary}; font-size: 0.75rem; display: block; margin-bottom: 0.375rem;`;
+  const handleSave = async (asTemplate = false) => {
+    if (!formulaName.trim() || zones.length === 0) return;
+    setSaving(true);
+    setSaveError('');
+    try {
+      const res = await fetch('/api/formulas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formulaName.trim(),
+          isTemplate: asTemplate,
+          zones: zones.map((z) => ({
+            zoneType: z.zoneType,
+            zoneName: z.name,
+            developerVolume: z.developerVolume,
+            mixingRatio: z.mixingRatio,
+            processingTime: z.processingTime,
+            products: [], // products would be linked via productId in production
+          })),
+        }),
+      });
+      if (!res.ok) {
+        const d = await res.json();
+        setSaveError(d.error ?? 'Failed to save formula.');
+      }
+    } catch {
+      setSaveError('Network error. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const totalGrams = zones.reduce((sum, z) => sum + z.amountGrams, 0);
+  const brand = carriedBrands.find((b) => b.slug === selectedBrand);
   const select = css`width: 100%; padding: 0.5rem 0.75rem; background: ${theme.colors.obsidian}; border: 1px solid ${theme.colors.borderDefault}; border-radius: ${theme.radii.md}; color: ${theme.colors.warmCream}; font-size: 0.875rem; &:focus { border-color: ${theme.colors.borderFocus}; outline: none; }`;
 
   return (
@@ -291,10 +324,13 @@ export default function FormulaDetailPage({ params }: { params: { id: string } }
             </Card>
 
             <div className={css`display: flex; flex-direction: column; gap: 0.75rem;`}>
-              <Button disabled={saving || zones.length === 0} onClick={() => { setSaving(true); setTimeout(() => setSaving(false), 1000); }}>
-                {saving ? 'Saving...' : 'Save Formula'}
+              <Button disabled={saving || zones.length === 0 || !formulaName.trim()} onClick={() => handleSave(false)}>
+                {saving ? 'Saving…' : 'Save Formula'}
               </Button>
-              <Button variant="secondary">Save as Template</Button>
+              <Button variant="secondary" disabled={saving || zones.length === 0 || !formulaName.trim()} onClick={() => handleSave(true)}>
+                Save as Template
+              </Button>
+              {saveError && <p className={css`color: ${theme.colors.error}; font-size: 0.78rem; margin: 0;`}>{saveError}</p>}
             </div>
           </div>
         </div>

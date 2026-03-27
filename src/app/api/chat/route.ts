@@ -2,8 +2,8 @@
  * POST /api/chat
  * Body: { messages: ChatMessage[]; context?: ElaraContext }
  *
- * Elara chat endpoint. Handles multi-turn conversation and
- * auto-triggers brand discovery when Elara detects an unknown brand.
+ * Elara chat endpoint. Handles multi-turn conversation,
+ * RAG knowledge retrieval, and brand discovery actions.
  */
 import { NextRequest } from 'next/server';
 import { jsonResponse, errorResponse, getAuthContext } from '@/lib/api-helpers';
@@ -13,6 +13,7 @@ import { brands, productLines, salons } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { discoverBrand, slugify } from '@/lib/ai/brandDiscovery';
 import { US_PROFESSIONAL_BRANDS } from '@/lib/brands/data';
+import { retrieveContext } from '@/lib/rag';
 
 export async function POST(request: NextRequest) {
   const auth = getAuthContext(request);
@@ -47,7 +48,14 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { reply, action } = await chatWithElara({ messages, context });
+    // ── RAG: retrieve relevant knowledge before calling Elara ──────────────
+    const lastUserMessage = [...messages].reverse().find((m) => m.role === 'user');
+    let ragContext = '';
+    if (lastUserMessage?.content) {
+      ragContext = await retrieveContext(lastUserMessage.content, { topK: 4, minSimilarity: 0.62 });
+    }
+
+    const { reply, action } = await chatWithElara({ messages, context, ragContext });
 
     // Handle embedded actions from Elara's response
     let actionResult: Record<string, unknown> | null = null;
