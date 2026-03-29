@@ -102,7 +102,7 @@ export default function AnalyticsPage() {
         <div className={css`margin-top: 2rem;`}>
           <Card>
             <p className={css`color: ${theme.colors.warmCream}; font-weight: 600; margin: 0 0 0.5rem;`}>
-              More analytics coming soon
+              Revenue tracking coming soon
             </p>
             <p className={css`color: ${theme.colors.textSecondary}; font-size: 0.875rem; margin: 0;`}>
               Revenue tracking, client retention, formula usage trends, and stylist performance metrics will appear here as you use the platform.
