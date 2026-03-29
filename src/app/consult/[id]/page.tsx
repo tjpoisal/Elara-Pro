@@ -1,10 +1,11 @@
 'use client';
 import { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { css } from '@emotion/css';
 import { theme } from '@/lib/theme';
 import { Navigation, MainContent, PageHeader, Card, Button, Input, Badge } from '@/components/Navigation';
 import { calculateLift, type HairLevel } from '@/lib/chemistry';
-import { TECHNIQUES, type Technique, type SkillLevel } from '@/lib/techniques/data';
+import { TECHNIQUES, type SkillLevel } from '@/lib/techniques/data';
 import { ServiceReminders, CriticalReminders } from '@/components/ServiceReminders';
 
 type ConsultStep = 'service' | 'client-hair' | 'photos' | 'patch-test' | 'consent' | 'color-plan' | 'techniques' | 'summary';
@@ -63,8 +64,11 @@ const SERVICE_TYPES: { id: ServiceType; label: string; icon: string; desc: strin
 ];
 
 export default function ConsultationDetailPage({ params }: { params: { id: string } }) {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState<ConsultStep>('service');
   const [isParsing, setIsParsing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
   const [parsedData, setParsedData] = useState<Record<string, unknown> | null>(null);
   const [cameraActive, setCameraActive] = useState<'before' | 'after' | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -97,6 +101,38 @@ export default function ConsultationDetailPage({ params }: { params: { id: strin
   });
 
   const update = (patch: Partial<ConsultData>) => setData((d) => ({ ...d, ...patch }));
+
+  const handleSaveConsultation = async (draftOnly = false) => {
+    setIsSaving(true);
+    setSaveError('');
+    try {
+      const res = await fetch('/api/consultations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          rawNotes: data.rawNotes || undefined,
+          currentLevel: data.currentLevel || undefined,
+          targetLevel: data.targetLevel || undefined,
+          grayPercentage: data.grayPercentage || undefined,
+          porosityLevel: data.porosity,
+          hairCondition: data.hairCondition,
+          scalpCondition: data.scalpCondition,
+          previousChemical: data.previousChemicals.join(', ') || undefined,
+          desiredResult: data.desiredResult || undefined,
+        }),
+      });
+      const d = await res.json();
+      if (!res.ok) { setSaveError(d.error ?? 'Failed to save.'); return; }
+      const consultId = d.consultation?.id;
+      if (!draftOnly && consultId) {
+        router.push(`/formulate/new?consultId=${consultId}`);
+      }
+    } catch {
+      setSaveError('Network error. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const liftResult = data.currentLevel && data.targetLevel
     ? calculateLift(data.currentLevel as HairLevel, data.targetLevel as HairLevel)
