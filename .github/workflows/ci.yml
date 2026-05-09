@@ -30,5 +30,10 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Generate Next.js type declarations
+        run: |
+          echo '/// <reference types="next" />' > next-env.d.ts
+          echo '/// <reference types="next/image-types/global" />' >> next-env.d.ts
+
       - name: Typecheck
         run: pnpm exec tsc --noEmit
