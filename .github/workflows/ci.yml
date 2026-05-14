@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ci:
     name: Lint, Typecheck & Build
@@ -25,9 +29,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        timeout-minutes: 15
 
       - name: Lint
         run: pnpm lint
+        timeout-minutes: 5
 
       - name: Generate Next.js type declarations
         run: |
@@ -36,7 +42,7 @@ jobs:
 
       - name: Typecheck
         run: pnpm exec tsc --noEmit
-        timeout-minutes: 5
+        timeout-minutes: 10
 
       - name: Build
         run: pnpm build
