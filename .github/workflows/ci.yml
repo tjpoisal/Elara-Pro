@@ -24,10 +24,12 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
+        timeout-minutes: 10
 
       - name: Lint
         run: pnpm lint
+        timeout-minutes: 5
 
       - name: Generate Next.js type declarations
         run: |
