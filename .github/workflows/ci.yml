@@ -25,9 +25,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        timeout-minutes: 10
 
       - name: Lint
         run: pnpm lint
+        timeout-minutes: 5
 
       - name: Generate Next.js type declarations
         run: |
@@ -36,10 +38,10 @@ jobs:
 
       - name: Typecheck
         run: pnpm exec tsc --noEmit
-        timeout-minutes: 5
+        timeout-minutes: 10
 
       - name: Build
         run: pnpm build
         env:
           SKIP_ENV_VALIDATION: 1
-        timeout-minutes: 10
+        timeout-minutes: 15
