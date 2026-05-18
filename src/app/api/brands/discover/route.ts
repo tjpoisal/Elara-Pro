@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest } from 'next/server';
 import { jsonResponse, errorResponse, getAuthContext } from '@/lib/api-helpers';
 import { db } from '@/lib/db';

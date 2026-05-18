@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest } from 'next/server';
 import { jsonResponse, errorResponse, parseBody, getAuthContext } from '@/lib/api-helpers';
 import { createCheckoutSchema } from '@/lib/validators';

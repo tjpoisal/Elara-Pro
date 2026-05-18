@@ -291,12 +291,21 @@ const badgeStyle = (color: string) => css`
   color: ${color};
 `;
 
+const variantColors: Record<string, string> = {
+  success: theme.colors.success,
+  warning: theme.colors.warning,
+  default: theme.colors.slateBlue,
+};
+
 export function Badge({
   children,
-  color = theme.colors.slateBlue,
+  color,
+  variant,
 }: {
   children: React.ReactNode;
   color?: string;
+  variant?: string;
 }) {
-  return <span className={badgeStyle(color)}>{children}</span>;
+  const resolvedColor = color ?? (variant ? (variantColors[variant] ?? theme.colors.slateBlue) : theme.colors.slateBlue);
+  return <span className={badgeStyle(resolvedColor)}>{children}</span>;
 }

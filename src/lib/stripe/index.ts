@@ -1,7 +1,20 @@
 import Stripe from 'stripe';
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  typescript: true,
+function getStripe(): Stripe {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error('STRIPE_SECRET_KEY environment variable is not set');
+  }
+  return new Stripe(key, { typescript: true });
+}
+
+let _stripe: Stripe | undefined;
+export const stripe: Stripe = new Proxy({} as Stripe, {
+  get(_target, prop: string | symbol) {
+    if (!_stripe) _stripe = getStripe();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (_stripe as any)[prop];
+  },
 });
 
 export const SUBSCRIPTION_TIERS = {

@@ -212,14 +212,14 @@ export default function ProductsPage() {
                           {CATEGORY_LABEL[line.category] ?? line.category}
                         </p>
                         <div className={css`display: flex; flex-wrap: wrap; gap: 0.5rem;`}>
-                          {line.mixRatio && (
+                          {line.defaultMixingRatio && (
                             <span className={css`color: ${theme.colors.textMuted}; font-size: 0.75rem;`}>
-                              Mix {line.mixRatio}
+                              Mix {line.defaultMixingRatio}
                             </span>
                           )}
-                          {line.processingTime && (
+                          {line.defaultProcessingTime && (
                             <span className={css`color: ${theme.colors.textMuted}; font-size: 0.75rem;`}>
-                              ⏱ {line.processingTime} min
+                              ⏱ {line.defaultProcessingTime} min
                             </span>
                           )}
                         </div>
@@ -283,11 +283,11 @@ export default function ProductsPage() {
                 <div className={css`padding: 0 1.25rem 1.25rem; border-top: 1px solid ${theme.colors.borderDefault};`}>
                   {!lines[brand.id] ? (
                     <p className={css`color: ${theme.colors.textMuted}; font-size: 0.875rem; margin-top: 1rem;`}>Loading lines…</p>
-                  ) : lines[brand.id].length === 0 ? (
+                  ) : lines[brand.id]!.length === 0 ? (
                     <p className={css`color: ${theme.colors.textMuted}; font-size: 0.875rem; margin-top: 1rem;`}>No product lines recorded.</p>
                   ) : (
                     <div className={css`display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; margin-top: 1rem;`}>
-                      {lines[brand.id].map((line) => (
+                      {lines[brand.id]!.map((line) => (
                         <div
                           key={line.id}
                           className={css`

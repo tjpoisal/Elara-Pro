@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 /**
  * POST /api/tts
  * Body: { text: string; voiceId?: string }

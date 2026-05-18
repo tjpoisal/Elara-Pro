@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest } from 'next/server';
 import { jsonResponse, errorResponse, getAuthContext } from '@/lib/api-helpers';
 import { db } from '@/lib/db';
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert brand
-    const [newBrand] = await db
+    const insertedBrands = await db
       .insert(brands)
       .values({
         name: body.name,
@@ -82,6 +83,11 @@ export async function POST(request: NextRequest) {
         discoveredBySalonId: auth.salonId,
       })
       .returning({ id: brands.id });
+
+    const newBrand = insertedBrands[0];
+    if (!newBrand) {
+      return errorResponse('Failed to insert brand', 500);
+    }
 
     // Insert product lines
     if (body.lines && body.lines.length > 0) {

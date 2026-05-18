@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 /**
  * GET /api/analytics
  * Returns dashboard stats for the authenticated salon.
