@@ -18,8 +18,7 @@ let _db: DB | undefined;
 export const db = new Proxy({} as DB, {
   get(_target, prop: string | symbol) {
     if (!_db) _db = getDb();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (_db as any)[prop];
+    return (_db as unknown as Record<string | symbol, unknown>)[prop];
   },
 });
 

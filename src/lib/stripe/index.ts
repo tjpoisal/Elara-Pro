@@ -12,8 +12,7 @@ let _stripe: Stripe | undefined;
 export const stripe: Stripe = new Proxy({} as Stripe, {
   get(_target, prop: string | symbol) {
     if (!_stripe) _stripe = getStripe();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (_stripe as any)[prop];
+    return (_stripe as unknown as Record<string | symbol, unknown>)[prop];
   },
 });
 
