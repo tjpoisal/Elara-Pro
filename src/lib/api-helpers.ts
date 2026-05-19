@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import type { ZodType } from 'zod/v4';
+import type { ZodType } from 'zod';
 
 export function jsonResponse<T>(data: T, status = 200): NextResponse {
   return NextResponse.json(data, { status });
