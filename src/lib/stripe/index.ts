@@ -1,7 +1,23 @@
 import Stripe from 'stripe';
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  typescript: true,
+// Lazily initialised so that importing this module at build time (when
+// STRIPE_SECRET_KEY is not available) does not throw.
+let _stripe: Stripe | undefined;
+
+export function getStripe(): Stripe {
+  if (!_stripe) {
+    const key = process.env.STRIPE_SECRET_KEY;
+    if (!key) throw new Error('STRIPE_SECRET_KEY environment variable is not set');
+    _stripe = new Stripe(key, { typescript: true });
+  }
+  return _stripe;
+}
+
+// Convenience proxy so existing `stripe.xxx` call-sites keep working.
+export const stripe = new Proxy({} as Stripe, {
+  get(_target, prop) {
+    return getStripe()[prop as keyof Stripe];
+  },
 });
 
 export const SUBSCRIPTION_TIERS = {
@@ -105,7 +121,7 @@ export async function createCheckoutSession(params: {
   cancelUrl: string;
   trialDays?: number;
 }): Promise<string> {
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     customer: params.customerId,
     mode: 'subscription',
     payment_method_types: ['card'],
@@ -126,7 +142,7 @@ export async function createCustomer(params: {
   name: string;
   metadata?: Record<string, string>;
 }): Promise<string> {
-  const customer = await stripe.customers.create({
+  const customer = await getStripe().customers.create({
     email: params.email,
     name: params.name,
     metadata: params.metadata,
@@ -140,7 +156,7 @@ export async function createPortalSession(
   customerId: string,
   returnUrl: string
 ): Promise<string> {
-  const session = await stripe.billingPortal.sessions.create({
+  const session = await getStripe().billingPortal.sessions.create({
     customer: customerId,
     return_url: returnUrl,
   });
@@ -154,9 +170,9 @@ export async function cancelSubscription(
   immediately = false
 ): Promise<void> {
   if (immediately) {
-    await stripe.subscriptions.cancel(subscriptionId);
+    await getStripe().subscriptions.cancel(subscriptionId);
   } else {
-    await stripe.subscriptions.update(subscriptionId, {
+    await getStripe().subscriptions.update(subscriptionId, {
       cancel_at_period_end: true,
     });
   }
@@ -166,5 +182,5 @@ export async function cancelSubscription(
 export async function getSubscription(
   subscriptionId: string
 ): Promise<Stripe.Subscription> {
-  return stripe.subscriptions.retrieve(subscriptionId);
+  return getStripe().subscriptions.retrieve(subscriptionId);
 }
