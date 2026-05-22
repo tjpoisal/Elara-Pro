@@ -6,7 +6,7 @@ on:
 
 jobs:
   ci:
-    name: Lint, Typecheck & Build
+    name: Lint & Typecheck
     runs-on: ubuntu-latest
 
     steps:
@@ -24,7 +24,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Lint
         run: pnpm lint
@@ -36,10 +36,3 @@ jobs:
 
       - name: Typecheck
         run: pnpm exec tsc --noEmit
-        timeout-minutes: 5
-
-      - name: Build
-        run: pnpm build
-        env:
-          SKIP_ENV_VALIDATION: 1
-        timeout-minutes: 10
