@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
+      - name: Generate PandaCSS styled-system
+        run: pnpm panda codegen
+
       - name: Lint
         run: pnpm lint
 
