@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  serverExternalPackages: [
+    'twilio',
+    'drizzle-orm',
+    '@neondatabase/serverless',
+    'drizzle-kit',
+  ],
+};
 
 export default nextConfig;
