@@ -42,4 +42,5 @@ jobs:
         run: pnpm build
         env:
           SKIP_ENV_VALIDATION: 1
+          DATABASE_URL: postgresql://user:password@localhost:5432/dbname
         timeout-minutes: 10
