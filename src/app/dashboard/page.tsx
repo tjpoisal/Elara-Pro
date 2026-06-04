@@ -201,7 +201,7 @@ export default function DashboardPage() {
                         {new Date(c.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </p>
                     </div>
-                    <Badge variant={c.status === 'completed' ? 'success' : c.status === 'in_progress' ? 'warning' : 'default'}>
+                    <Badge color={c.status === 'completed' ? 'success' : c.status === 'in_progress' ? 'warning' : 'default'}>
                       {c.status.replace('_', ' ')}
                     </Badge>
                   </div>

@@ -197,7 +197,7 @@ export default function BillingPage() {
                 <h4 className={css`color: ${theme.colors.warmCream}; font-size: 1rem; margin: 0;`}>
                   {VOICE_ADDON.name}
                 </h4>
-                {billing?.voiceEnabled && <Badge variant="success">Active</Badge>}
+                {billing?.voiceEnabled && <Badge color="success">Active</Badge>}
               </div>
               <ul className={css`list-style: none; padding: 0; margin: 0;`}>
                 {VOICE_ADDON.features.map((f) => (
