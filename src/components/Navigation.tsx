@@ -300,7 +300,7 @@ export function Badge({
   color?: string;
   variant?: 'success' | 'warning' | 'default' | 'error';
 }) {
-  let resolvedColor = theme.colors.slateBlue;
+  let resolvedColor: string = theme.colors.slateBlue;
   if (color) {
     resolvedColor = color;
   } else if (variant === 'success') {
