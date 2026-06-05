@@ -83,6 +83,10 @@ export async function POST(request: NextRequest) {
       })
       .returning({ id: brands.id });
 
+    if (!newBrand) {
+      return errorResponse('Failed to create brand', 500);
+    }
+
     // Insert product lines
     if (body.lines && body.lines.length > 0) {
       await db.insert(productLines).values(
