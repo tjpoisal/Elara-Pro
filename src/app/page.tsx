@@ -236,7 +236,7 @@ function DownloadSection() {
               ↓ Download APK
             </a>
             <p className={css`color: ${theme.colors.textMuted}; font-size: 0.7rem; margin-top: 1rem; line-height: 1.5;`}>
-              Enable "Install from unknown sources" in Android Settings → Security, then open the APK.
+              Enable &quot;Install from unknown sources&quot; in Android Settings → Security, then open the APK.
             </p>
           </div>
         </div>
@@ -317,7 +317,7 @@ export default function LandingPage() {
             background-clip: text;
             animation: ${shimmer} 4s linear infinite;
           `}>
-            The Hairdresser's<br />Ultimate Tool
+            The Hairdresser&apos;s<br />Ultimate Tool
           </h1>
 
           <p className={css`
@@ -381,7 +381,7 @@ export default function LandingPage() {
               <div className={css`background: ${theme.colors.obsidian}; border-radius: ${theme.radii.md}; padding: 1rem; border-left: 3px solid ${theme.colors.roseGold};`}>
                 <p className={css`color: ${theme.colors.textMuted}; font-size: 0.7rem; margin: 0 0 0.375rem; text-transform: uppercase; letter-spacing: 0.05em;`}>Elara</p>
                 <p className={css`color: ${theme.colors.textSecondary}; font-size: 0.85rem; margin: 0; line-height: 1.5;`}>
-                  Sarah has a keratin treatment from 6 weeks ago — use a lower developer (20vol) on the ends to avoid over-processing. I'd also recommend a bond additive in the lightener.
+                  Sarah has a keratin treatment from 6 weeks ago — use a lower developer (20vol) on the ends to avoid over-processing. I&apos;d also recommend a bond additive in the lightener.
                 </p>
               </div>
             </div>
@@ -476,7 +476,7 @@ export default function LandingPage() {
                 border-radius: ${theme.radii.lg};
                 padding: 2rem;
               `}>
-                <p className={css`color: ${theme.colors.roseGold}; font-size: 1.5rem; margin: 0 0 1rem; line-height: 1;`}>"</p>
+                <p className={css`color: ${theme.colors.roseGold}; font-size: 1.5rem; margin: 0 0 1rem; line-height: 1;`}>&quot;</p>
                 <p className={css`color: ${theme.colors.textSecondary}; font-size: 0.9rem; line-height: 1.7; margin: 0 0 1.5rem; font-style: italic;`}>{t.quote}</p>
                 <div>
                   <p className={css`color: ${theme.colors.warmCream}; font-weight: 600; font-size: 0.875rem; margin: 0;`}>{t.name}</p>
@@ -498,7 +498,7 @@ export default function LandingPage() {
         <div className={container}>
           <h2 className={sectionTitle}>Simple, transparent pricing</h2>
           <p className={sectionSub}>
-            Start free. Upgrade when you're ready. Every paid plan includes a 7-day free trial.
+            Start free. Upgrade when you&apos;re ready. Every paid plan includes a 7-day free trial.
           </p>
           <div className={css`display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; align-items: start;`}>
             {plans.map((plan) => (
