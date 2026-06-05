@@ -293,10 +293,22 @@ const badgeStyle = (color: string) => css`
 
 export function Badge({
   children,
-  color = theme.colors.slateBlue,
+  color,
+  variant,
 }: {
   children: React.ReactNode;
   color?: string;
+  variant?: 'success' | 'warning' | 'default' | 'error';
 }) {
-  return <span className={badgeStyle(color)}>{children}</span>;
+  let resolvedColor = theme.colors.slateBlue;
+  if (color) {
+    resolvedColor = color;
+  } else if (variant === 'success') {
+    resolvedColor = theme.colors.success;
+  } else if (variant === 'warning') {
+    resolvedColor = '#f59e0b';
+  } else if (variant === 'error') {
+    resolvedColor = theme.colors.error;
+  }
+  return <span className={badgeStyle(resolvedColor)}>{children}</span>;
 }
