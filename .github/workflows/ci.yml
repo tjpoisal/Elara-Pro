@@ -39,4 +39,5 @@ jobs:
         env:
           SKIP_ENV_VALIDATION: 1
           DATABASE_URL: "postgresql://dummy:dummy@localhost/dummy"
+          STRIPE_SECRET_KEY: "sk_test_dummy_ci_key_not_real"
         timeout-minutes: 10
