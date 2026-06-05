@@ -37,7 +37,13 @@ jobs:
       - name: Build
         run: pnpm build
         env:
-          SKIP_ENV_VALIDATION: 1
+          SKIP_ENV_VALIDATION: "1"
           DATABASE_URL: "postgresql://dummy:dummy@localhost/dummy"
           STRIPE_SECRET_KEY: "sk_test_dummy_ci_key_not_real"
+          RESEND_API_KEY: "re_dummy_ci_key_not_real"
+          ANTHROPIC_API_KEY: "sk-ant-dummy-ci-key-not-real"
+          TWILIO_ACCOUNT_SID: "ACdummydummydummydummydummydummydumm"
+          TWILIO_AUTH_TOKEN: "dummydummydummydummydummydummydumm"
+          TWILIO_PHONE_NUMBER: "+15551234567"
+          NEXT_PUBLIC_APP_URL: "http://localhost:3000"
         timeout-minutes: 10
