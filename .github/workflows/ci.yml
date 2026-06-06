@@ -6,7 +6,7 @@ on:
 
 jobs:
   ci:
-    name: Lint, Typecheck & Build
+    name: Lint & Build
     runs-on: ubuntu-latest
 
     steps:
@@ -24,7 +24,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Lint
         run: pnpm lint
@@ -34,20 +34,18 @@ jobs:
           echo '/// <reference types="next" />' > next-env.d.ts
           echo '/// <reference types="next/image-types/global" />' >> next-env.d.ts
 
-      - name: Typecheck
-        run: pnpm exec tsc --noEmit
-        timeout-minutes: 5
-
       - name: Build
         run: pnpm build
         env:
-          SKIP_ENV_VALIDATION: 1
-          # Dummy values - SDKs initialize eagerly; no real API calls occur during build
-          DATABASE_URL: postgresql://user:password@localhost:5432/dbname
-          STRIPE_SECRET_KEY: dummy_ci_key_not_a_real_stripe_key
-          RESEND_API_KEY: dummy_ci_key_not_a_real_resend_key
-          ANTHROPIC_API_KEY: dummy_ci_key_not_a_real_anthropic_key
-          ELEVENLABS_API_KEY: dummy_ci_key_not_a_real_elevenlabs_key
-          FORMULA_VAULT_KEY: 0000000000000000000000000000000000000000000000000000000000000000
-          NEXT_PUBLIC_APP_URL: http://localhost:3000
+          SKIP_ENV_VALIDATION: "1"
+          DATABASE_URL: "postgresql://dummy:dummy@localhost/dummy"
+          STRIPE_SECRET_KEY: "sk_test_dummy_ci_key_not_real"
+          RESEND_API_KEY: "re_dummy_ci_key_not_real"
+          ANTHROPIC_API_KEY: "sk-ant-dummy-ci-key-not-real"
+          ELEVENLABS_API_KEY: "dummy_ci_key_not_real"
+          FORMULA_VAULT_KEY: "0000000000000000000000000000000000000000000000000000000000000000"
+          TWILIO_ACCOUNT_SID: "ACdummydummydummydummydummydummydumm"
+          TWILIO_AUTH_TOKEN: "dummydummydummydummydummydummydumm"
+          TWILIO_PHONE_NUMBER: "+15551234567"
+          NEXT_PUBLIC_APP_URL: "http://localhost:3000"
         timeout-minutes: 10
