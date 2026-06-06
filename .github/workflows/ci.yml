@@ -2,6 +2,7 @@ name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 jobs:
@@ -28,6 +29,10 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit
+        continue-on-error: true
 
       - name: Generate Next.js type declarations
         run: |

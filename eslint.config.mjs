@@ -5,17 +5,15 @@ export default [
     ignores: [
       "node_modules/**",
       ".next/**",
-      "**/*.ts",
-      "**/*.tsx",
       "**/*.d.ts",
     ],
   },
   {
-    files: ["**/*.{js,jsx,mjs,cjs}"],
+    files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
     rules: {
       ...js.configs.recommended.rules,
       "no-undef": "off",
-      "no-unused-vars": "off",
+      "no-unused-vars": "warn",
     },
   },
 ];
