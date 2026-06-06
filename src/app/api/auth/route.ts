@@ -4,12 +4,15 @@ import { loginSchema, registerSchema } from '@/lib/validators';
 import { db } from '@/lib/db';
 import { users, salons } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import { createHash, randomBytes } from 'crypto';
+import { scryptSync, randomBytes, timingSafeEqual } from 'crypto';
 
 function hashPassword(password: string, salt: string): string {
-  return createHash('sha256')
-    .update(password + salt)
-    .digest('hex');
+  return scryptSync(password, salt, 64).toString('hex');
+}
+
+function verifyPassword(password: string, salt: string, storedHash: string): boolean {
+  const derivedKey = scryptSync(password, salt, 64);
+  return timingSafeEqual(derivedKey, Buffer.from(storedHash, 'hex'));
 }
 
 export async function POST(request: NextRequest) {
@@ -87,8 +90,7 @@ export async function POST(request: NextRequest) {
     const [storedHash, salt] = user.passwordHash.split(':');
     if (!salt || !storedHash) return errorResponse('Invalid credentials', 401);
 
-    const inputHash = hashPassword(result.data!.password, salt);
-    if (inputHash !== storedHash) {
+    if (!verifyPassword(result.data!.password, salt, storedHash)) {
       return errorResponse('Invalid credentials', 401);
     }
 

@@ -48,13 +48,21 @@ export async function POST(request: NextRequest) {
           .limit(1);
 
         if (salon) {
-          // Determine tier from price
           const priceId = subscription.items.data[0]?.price?.id;
           let tier: TierSlug = 'free';
-          for (const [slug, config] of Object.entries(SUBSCRIPTION_TIERS)) {
-            if (slug === 'free') continue;
-            // In production, match against actual Stripe price IDs
-            tier = slug as TierSlug;
+          if (priceId) {
+            for (const [slug] of Object.entries(SUBSCRIPTION_TIERS)) {
+              if (slug === 'free') continue;
+              const monthlyKey = `STRIPE_PRICE_${slug.toUpperCase()}_MONTHLY`;
+              const annualKey = `STRIPE_PRICE_${slug.toUpperCase()}_ANNUAL`;
+              if (
+                priceId === process.env[monthlyKey] ||
+                priceId === process.env[annualKey]
+              ) {
+                tier = slug as TierSlug;
+                break;
+              }
+            }
           }
 
           await db
@@ -113,9 +121,13 @@ export async function POST(request: NextRequest) {
     }
 
     const tier = SUBSCRIPTION_TIERS[result.data!.tier];
-    const priceId = result.data!.billingPeriod === 'annual'
-      ? `price_${result.data!.tier}_annual`  // Replace with actual Stripe price IDs
-      : `price_${result.data!.tier}_monthly`;
+    const tierSlug = result.data!.tier.toUpperCase();
+    const periodKey = result.data!.billingPeriod === 'annual' ? 'ANNUAL' : 'MONTHLY';
+    const priceId = process.env[`STRIPE_PRICE_${tierSlug}_${periodKey}`];
+
+    if (!priceId) {
+      return errorResponse(`Stripe price ID not configured for ${tier.name} ${result.data!.billingPeriod}`, 500);
+    }
 
     const checkoutUrl = await createCheckoutSession({
       customerId: salon.stripeCustomerId,
