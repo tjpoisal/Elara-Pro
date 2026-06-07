@@ -1,1 +1,50 @@
-bmFtZTogQ0kKCm9uOgogIHB1c2g6CiAgcHVsbF9yZXF1ZXN0OgogIHdvcmtmbG93X2Rpc3BhdGNoOgoKam9iczoKICBjaToKICAgIG5hbWU6IExpbnQgJiBCdWlsZAogICAgcnVucy1vbjogdWJ1bnR1LWxhdGVzdAoKICAgIHN0ZXBzOgogICAgICAtIHVzZXM6IGFjdGlvbnMvY2hlY2tvdXRAdjQKCiAgICAgIC0gbmFtZTogU2V0dXAgcG5wbQogICAgICAgIHVzZXM6IHBucG0vYWN0aW9uLXNldHVwQHY0CiAgICAgICAgd2l0aDoKICAgICAgICAgIHZlcnNpb246IDkKCiAgICAgIC0gbmFtZTogU2V0dXAgTm9kZQogICAgICAgIHVzZXM6IGFjdGlvbnMvc2V0dXAtbm9kZUB2NAogICAgICAgIHdpdGg6CiAgICAgICAgICBub2RlLXZlcnNpb246IDIyCiAgICAgICAgICBjYWNoZTogcG5wbQoKICAgICAgLSBuYW1lOiBJbnN0YWxsIGRlcGVuZGVuY2llcwogICAgICAgIHJ1bjogcG5wbSBpbnN0YWxsIC0tbm8tZnJvemVuLWxvY2tmaWxlCgogICAgICAtIG5hbWU6IExpbnQKICAgICAgICBydW46IHBucG0gbGludAoKICAgICAgLSBuYW1lOiBHZW5lcmF0ZSBOZXh0LmpzIHR5cGUgZGVjbGFyYXRpb25zCiAgICAgICAgcnVuOiB8CiAgICAgICAgICBlY2hvICcvLy8gPHJlZmVyZW5jZSB0eXBlcz0ibmV4dCIgLz4nID4gbmV4dC1lbnYuZC50cwogICAgICAgICAgZWNobyAnLy8vIDxyZWZlcmVuY2UgdHlwZXM9Im5leHQvaW1hZ2UtdHlwZXMvZ2xvYmFsIiAvPicgPj4gbmV4dC1lbnYuZC50cwoKICAgICAgLSBuYW1lOiBCdWlsZAogICAgICAgIHJ1bjogcG5wbSBidWlsZAogICAgICAgIGVudjoKICAgICAgICAgIFNLSVBfRU5WX1ZBTElEQVRJT046ICIxIgogICAgICAgICAgREFUQUJBU0VfVVJMOiAicG9zdGdyZXNxbDovL2R1bW15OmR1bW15QGxvY2FsaG9zdC9kdW1teSIKICAgICAgICAgIFNUUklQRV9TRUNSRVRfS0VZOiAic2tfdGVzdF9kdW1teV9jaV9rZXlfbm90X3JlYWwiCiAgICAgICAgICBSRVNFTkRfQVBJX0tFWTogInJlX2R1bW15X2NpX2tleV9ub3RfcmVhbCIKICAgICAgICAgIEFOVEhST1BJQ19BUElfS0VZOiAic2stYW50LWR1bW15LWNpLWtleS1ub3QtcmVhbCIKICAgICAgICAgIFRXSUxJT19BQ0NPVU5UX1NJRDogIkFDZHVtbXlkdW1teWR1bW15ZHVtbXlkdW1teWR1bW15ZHVtbSIKICAgICAgICAgIFRXSUxJT19BVVRIX1RPS0VOOiAiZHVtbXlkdW1teWR1bW15ZHVtbXlkdW1teWR1bW15ZHVtbSIKICAgICAgICAgIFRXSUxJT19QSE9ORV9OVU1CRVI6ICIrMTU1NTEyMzQ1NjciCiAgICAgICAgICBORVhUX1BVQkxJQ19BUFBfVVJMOiAiaHR0cDovL2xvY2FsaG9zdDozMDAwIgogICAgICAgIHRpbWVvdXQtbWludXRlczogMTAK
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ci:
+    name: Lint & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Generate Next.js type declarations
+        run: |
+          echo '/// <reference types="next" />' > next-env.d.ts
+          echo '/// <reference types="next/image-types/global" />' >> next-env.d.ts
+
+      - name: Build
+        run: pnpm build
+        env:
+          SKIP_ENV_VALIDATION: "1"
+          DATABASE_URL: "postgresql://dummy:dummy@localhost/dummy"
+          STRIPE_SECRET_KEY: "sk_test_dummy_ci_key_not_real"
+          RESEND_API_KEY: "re_dummy_ci_key_not_real"
+          ANTHROPIC_API_KEY: "sk-ant-dummy-ci-key-not-real"
+          TWILIO_ACCOUNT_SID: "ACdummydummydummydummydummydummydumm"
+          TWILIO_AUTH_TOKEN: "dummydummydummydummydummydummydumm"
+          TWILIO_PHONE_NUMBER: "+15551234567"
+          NEXT_PUBLIC_APP_URL: "http://localhost:3000"
+        timeout-minutes: 10
