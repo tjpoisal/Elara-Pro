@@ -29,6 +29,13 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # Surface TypeScript errors as annotations without blocking CI.
+      # ignoreBuildErrors: true is set in next.config.mjs while strict-mode
+      # errors are being resolved. Track progress by watching this step.
+      - name: Type check (non-blocking)
+        run: pnpm exec tsc --noEmit
+        continue-on-error: true
+
       - name: Generate Next.js type declarations
         run: |
           echo '/// <reference types="next" />' > next-env.d.ts
