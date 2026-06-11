@@ -1,3 +1,8 @@
-import { createConfig } from 'eslint-config-next/flat';
+import js from '@eslint/js';
 
-export default createConfig();
+export default [
+  js.configs.recommended,
+  {
+    ignores: ['**/*.ts', '**/*.tsx', 'node_modules/**', '.next/**', 'styled-system/**'],
+  },
+];
