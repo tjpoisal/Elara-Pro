@@ -48,13 +48,19 @@ export async function POST(request: NextRequest) {
           .limit(1);
 
         if (salon) {
-          // Determine tier from price
           const priceId = subscription.items.data[0]?.price?.id;
           let tier: TierSlug = 'free';
-          for (const [slug, config] of Object.entries(SUBSCRIPTION_TIERS)) {
-            if (slug === 'free') continue;
-            // In production, match against actual Stripe price IDs
-            tier = slug as TierSlug;
+          if (priceId) {
+            for (const slug of Object.keys(SUBSCRIPTION_TIERS) as TierSlug[]) {
+              if (slug === 'free') continue;
+              if (
+                priceId === `price_${slug}_monthly` ||
+                priceId === `price_${slug}_annual`
+              ) {
+                tier = slug;
+                break;
+              }
+            }
           }
 
           await db
