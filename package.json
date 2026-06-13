@@ -8,6 +8,10 @@
     "start": "next start",
     "lint": "eslint ."
   },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
     "@capacitor/android": "^8.2.0",
