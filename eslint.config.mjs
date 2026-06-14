@@ -5,8 +5,6 @@ export default [
     ignores: [
       "node_modules/**",
       ".next/**",
-      "**/*.ts",
-      "**/*.tsx",
       "**/*.d.ts",
     ],
   },
@@ -17,5 +15,9 @@ export default [
       "no-undef": "off",
       "no-unused-vars": "off",
     },
+  },
+  {
+    files: ["**/*.{ts,tsx}"],
+    rules: {},
   },
 ];
